@@ -12,7 +12,6 @@ LABEL_MAP = {
     "square": -1
 }
 
-step_size = 0
 prev_weight = None
 w = np.zeros((IMG_SIZE, IMG_SIZE), dtype=np.float32)
 b = 0.0
@@ -89,26 +88,13 @@ def update(true_label: int, predicted_label: int, x: np.ndarray):
             w -= x
             b -= 1
 
-        save_weights(model="step", size=100)
 
-
-def save_weights(model: str = "step", size: int = 10):
+def save_weights():
     """
-    Saves the current weights and bias to a file.
+    Saves the current weights to a file.
     """
-    global step_size, w_steps, w
-    if model == "step":
-        if step_size == 0:
-            w_steps.append(w.copy())
-            step_size = size
-        else:
-            step_size -= 1
-    
-    elif model == "all":
-        w_steps.append(w.copy())
-
-    else:
-        raise ValueError("Model must be 'step' or 'all'.")
+    global w_steps, w
+    w_steps.append(w.copy())
 
 
 def calculate_weigth():
@@ -134,7 +120,6 @@ def calculate_weigth():
             y_true_s = LABEL_MAP["square"]
             y_pred_s = classification(multiplication(x_s))
             update(y_true_s, y_pred_s, x_s)
-            save_weights()
 
         if prev_weight is not None and np.array_equal(prev_weight, w):
             break
@@ -180,8 +165,8 @@ def save_model_csv(w_matrix, b_value, path="model/"):
 
 def main():
     calculate_weigth()
-    for i in range(len(w_steps)):
-        save_weights_colormap(w_steps[i], "data/w_images/", f"data/w_images/weights_step_{i}.png")
+    save_weights()
+    save_weights_colormap(w_steps[-1], "weigth_map/", "weigth_map/final_weight.png")
     save_model_csv(w, b)
 
 
