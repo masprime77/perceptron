@@ -10,7 +10,7 @@ SPLITS = ["train", "val", "test"]
 SHAPES = ["circle", "square"]
 MIN_R, MAX_R = 6, 24
 MIN_S, MAX_S = 10, 40
-N_PER_SHAPE = 5000
+N_PER_SHAPE = 500
 SPLIT_RATIO = [0.7, 0.15, 0.15]  # train, val, test
 
 
